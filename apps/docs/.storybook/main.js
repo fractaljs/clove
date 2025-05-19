@@ -1,17 +1,20 @@
 import { dirname, join, resolve } from "path";
+import { fileURLToPath } from "url";
 
-function getAbsolutePath(value) {
-  return dirname(require.resolve(join(value, "package.json")));
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+async function getAbsolutePath(value) {
+  const packageJsonPath = await import.meta.resolve(
+    join(value, "package.json")
+  );
+  return dirname(packageJsonPath);
 }
 
 const config = {
   stories: ["../stories/*.stories.tsx", "../stories/**/*.stories.tsx"],
-  addons: [
-    getAbsolutePath("@storybook/addon-links"),
-    getAbsolutePath("@storybook/addon-essentials"),
-  ],
+  addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
   framework: {
-    name: getAbsolutePath("@storybook/react-vite"),
+    name: "@storybook/react-vite",
     options: {},
   },
 
